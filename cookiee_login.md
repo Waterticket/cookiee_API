@@ -133,7 +133,7 @@
     
     void Social_Login_open()
     {
-    	Application.OpenURL("https://www.cookiee.net/login_open?token="+Game_Token+"&hs="+Random_Hash);
+    	Application.OpenURL("https://www.cookiee.net/login_open?token="+Game_Token+"&hash="+Random_Hash);
     }
     
     IEnumerator Social_Login_check()
