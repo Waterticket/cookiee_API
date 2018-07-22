@@ -108,50 +108,63 @@
 
 예시는  유니티로 들겠다.
 #### 예제
-	using System;
-    
-    private String Game_Token = "게임 토큰";
-    private String Random_Hash = "";
-    private int user_srl = -1;
-    
-    using (SHA1Managed sha1 = new SHA1Managed())
+	using System.Security.Cryptography;
+	using System.Text;
+	using System.Collections;
+	using System.Collections.Generic;
+	using UnityEngine;
+	using UnityEngine.Networking;
+
+	public class LoginTest : MonoBehaviour
 	{
-		var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(Convert.ToString(Random.Range(1000,9999999)*Random.Range(1,100))));
-		var sb = new StringBuilder(hash.Length * 2);
+	    private string Game_Token = "";
+	    private string Random_Hash = "";
+	    private int user_srl = -1;
 
-		foreach (byte b in hash)
-		sb.Append(b.ToString("X2"));
+	    void Start()
+	    {
+		using (SHA1Managed sha1 = new SHA1Managed())
+		{
+		    var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes((Random.Range(1000, 9999999) * Random.Range(1, 100)).ToString()));
+		    var sb = new StringBuilder(hash.Length * 2);
 
-		Random_Hash = sb.ToString().ToLower();
+		    foreach (byte b in hash)
+			sb.Append(b.ToString("X2"));
+
+		    Random_Hash = sb.ToString().ToLower();
+		}
+
+		Social_Login_open();
+		StartCoroutine(Social_Login_check()); //0.5초마다 실행
+	    }
+
+	    void Social_Login_open()
+	    {
+		Application.OpenURL("https://www.cookiee.net/login_open.php?token=" + Game_Token + "&hash=" + Random_Hash);
+	    }
+
+	    IEnumerator Social_Login_check()
+	    {
+		while (true)
+		{
+		    WWWForm form = new WWWForm();
+		    form.AddField("token", Game_Token);
+		    form.AddField("hs", Random_Hash);
+		    WWW www = new WWW("https://www.cookiee.net/tools/login_social_check", form);
+		    yield return www;
+		    user_srl = int.Parse(www.text);
+		    if (user_srl < 0)
+		    {
+			StartCoroutine(Social_Login_check());
+		    }
+		    else
+		    {
+			//로그인 성공
+			print("User_srl : " + user_srl);
+		    }
+
+		    yield return new WaitForSeconds(0.5f);
+		}
+	    }
 	}
-    
-    void Start()
-    {
-    	Social_Login_open();
-    	StartCoroutine(Social_Login_check(),0.5); //0.5초마다 실행
-    }
-    
-    void Social_Login_open()
-    {
-    	Application.OpenURL("https://www.cookiee.net/login_open?token="+Game_Token+"&hash="+Random_Hash);
-    }
-    
-    IEnumerator Social_Login_check()
-    {
-    	WWWForm form = new WWWForm();
-        form.AddField("token", Game_Token);
-        form.AddField("hs", Random_Hash);
-        WWW www = new WWW("https://www.cookiee.net/tools/login_social_check", form);
-        yield return www;
-        user_srl = Convert.ToInt32(www.text);
-        if(user_srl<0)
-        {
-        	StartCoroutine(Social_Login_check(),0.5);
-            }else{
-            
-        	//로그인 성공
-            print("User_srl : "+user_srl);
-            
-        }
-    }
 이상으로 소셜로그인 설명을 마친다.
