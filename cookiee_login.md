@@ -3,7 +3,7 @@
 
 ## 일반 로그인
 일반 로그인은 아이디, 비밀번호로만 이루어져 있기에 구현이 간단하다.<br />
-그러나 많은 이들이 소셜로그인으로 로그인 할경우가 많기에, 범용성 면에서는 떨어진다는것을 염두하여야 한다. 
+그러나 많은 이들이 소셜 로그인으로 로그인 할경우가 많기에, 범용성 면에서는 떨어진다는것을 염두하여야 한다. 
 
 먼저 아이디와 비밀번호를  각각 id와 pw라는 변수에 받았다고 가정하자.<br />
 일반 로그인은 비밀번호 노출 가능성이 있기에 https, POST 통신밖에 받지 않는다.
@@ -38,13 +38,22 @@
 	* WWW 클래스 *
     using System;
     
-	WWWForm form = new WWWForm();
-    form.AddField("uid", 아이디 String);
-    form.AddField("ups", 비밀번호 String);
-    form.AddField("tkn", 게임 토큰 String);
-    WWW www = new WWW("https://cookiee.net/tools/login_normal", form);
-    yield return www;
-    int result = Convert.ToInt32(www.text);
+    IEnumerator Cookiee_ID_Login()
+    {
+		WWWForm form = new WWWForm();
+    	form.AddField("uid", 아이디 String);
+    	form.AddField("ups", 비밀번호 String);
+    	form.AddField("tkn", 게임 토큰 String);
+    	WWW www = new WWW("https://cookiee.net/tools/login_normal", form);
+    	yield return www;
+    	int result = Convert.ToInt32(www.text);
+    	
+    	if (result<0){
+    		//로그인 실패
+    	}else{
+    		//로그인 성공
+    	}
+    }
 <br />
 
 ## 소셜 로그인
@@ -97,18 +106,41 @@
 	이외의 음수 : 알수없는 오류
 이렇게 구현해주면 소셜로그인이 가능해진다.
 
+예시는  유니티로 들겠다.
 #### 예제
 	using System;
     
     private String Game_Token = "게임 토큰";
-    private String Random_Hash = "";
+    private String Random_Hash = Convert.ToString(Random.Range(1000,9999999)*Random.Range(1,100));
+    private int user_srl = -1;
     
-    IEnumerator Social_Login_open()
+    void Start()
+    {
+    	Social_Login_open();
+    	StartCoroutine(Social_Login_check(),0.5); //0.5초마다 실행
+    }
+    
+    void Social_Login_open()
     {
     	Application.OpenURL("https://www.cookiee.net/login_open?token="+Game_Token+"&hs="+Random_Hash);
     }
     
     IEnumerator Social_Login_check()
     {
-    	
+    	WWWForm form = new WWWForm();
+        form.AddField("token", Game_Token);
+        form.AddField("hs", Random_Hash);
+        WWW www = new WWW("https://www.cookiee.net/tools/login_social_check", form);
+        yield return www;
+        user_srl = Convert.ToInt32(www.text);
+        if(user_srl<0)
+        {
+        	StartCoroutine(Social_Login_check(),0.5);
+            }else{
+            
+        	//로그인 성공
+            print("User_srl : "+user_srl);
+            
+        }
     }
+이상으로 소셜로그인 설명을 마친다.
