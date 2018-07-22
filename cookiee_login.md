@@ -67,7 +67,7 @@
     https://www.cookiee.net/login_open
     
     패킷 형식
-    자유(GET 가능, POST 추천)
+    GET
     
     보내야할 패킷
     token=게임 토큰
