@@ -111,8 +111,19 @@
 	using System;
     
     private String Game_Token = "게임 토큰";
-    private String Random_Hash = Convert.ToString(Random.Range(1000,9999999)*Random.Range(1,100));
+    private String Random_Hash = "";
     private int user_srl = -1;
+    
+    using (SHA1Managed sha1 = new SHA1Managed())
+	{
+		var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(Convert.ToString(Random.Range(1000,9999999)*Random.Range(1,100))));
+		var sb = new StringBuilder(hash.Length * 2);
+
+		foreach (byte b in hash)
+		sb.Append(b.ToString("X2"));
+
+		Random_Hash = sb.ToString().ToLower();
+	}
     
     void Start()
     {
