@@ -75,3 +75,40 @@
 	ex) 랜덤하게 수 생성 (1000~9999999 * 1~100)
 
 ### 로그인 체크
+외부 브라우저에서 로그인을 진행할동안, 프로그램에서는 로그인이 완료되었는지 수시로 체크해야 한다.<br>
+아래의 링크를 일정 시간 마다 (300ms~500ms) 계속 데이터를 받아와 로그인을 체크해야 한다.<br><br>
+추천, 일정시간이 지나면(예 5분) 로그인을 취소하고 처음부터 다시 로그인을 시작한다.
+
+	체크 링크
+    https://www.cookiee.net/tools/login_social_check
+    
+    패킷 형식
+    POST
+    
+    보내야할 패킷
+    token=게임 토큰
+    hs=랜덤 해쉬(이전에 만든 해쉬)
+    
+#### 리턴 값
+
+	-1 : 로그인 데이터가 존재하지 않음 (로그인 되지 않음)
+	
+	이외의 자연수 : User SRL (로그인 성공)
+	이외의 음수 : 알수없는 오류
+이렇게 구현해주면 소셜로그인이 가능해진다.
+
+#### 예제
+	using System;
+    
+    private String Game_Token = "게임 토큰";
+    private String Random_Hash = "";
+    
+    IEnumerator Social_Login_open()
+    {
+    	Application.OpenURL("https://www.cookiee.net/login_open?token="+Game_Token+"&hs="+Random_Hash);
+    }
+    
+    IEnumerator Social_Login_check()
+    {
+    	
+    }
