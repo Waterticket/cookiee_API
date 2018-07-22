@@ -26,6 +26,8 @@
 ex) 게임명 : Jump!<br><b>
 > https://www.cookiee.net/score/view/jump!</b>
 
+![웹스코어보드 예시](/img/score_board_1.PNG)
+
 ##### 리턴 값
 	Void
 <br>
