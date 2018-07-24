@@ -144,7 +144,7 @@
 
 	    void Social_Login_open()
 	    {
-		Application.OpenURL("https://www.cookiee.net/login_open.php?token=" + Game_Token + "&hash=" + Random_Hash);
+		Application.OpenURL("https://www.cookiee.net/login_open.direct?token=" + Game_Token + "&hash=" + Random_Hash);
 	    }
 
 	    IEnumerator Social_Login_check()
@@ -171,4 +171,5 @@
 		}
 	    }
 	}
+
 이상으로 소셜로그인 설명을 마친다.
