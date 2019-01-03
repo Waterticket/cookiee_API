@@ -6,7 +6,7 @@
 데이터 값은 json 또는 xml을 추천한다 <br/>
 ~~~
 전송 링크
-https://www.cookiee.net/tools/game_data_sav
+https://www.cookiee.net/tools/game_data_save
 
 패킷 형식
 POST
