@@ -14,7 +14,7 @@ POST
 보내야할 패킷
 token = 발급받은 토큰
 srl = 로그인후 받은 user_srl
-ds = 데이터 값 (base64 encode후 전송)
+ds = 데이터 값 (base64 encode후 전송필요)
 hs = 해쉬 값 (아래 설명)
 ct = 데이터 값의 구조 (json, xml)
 
@@ -24,7 +24,7 @@ ct = 데이터 값의 구조 (json, xml)
 ~~~
 <br>
 여기서 해쉬 값이란 데이터의 유효성를 증명하기 위해 사용된다 <br/>
-해쉬 값 = base64_encode 전의 값 + 토큰의 Client_secret값 <br/>
+해쉬 값 = base64_encode 전의 데이터 값 + 토큰의 Client_secret값 <br/>
 
 ### 데이터 저장 확인
 로그인 후 [개발자 센터](https://www.cookiee.net/developer) -> [쿠키 게임 관리 시스템](https://www.cookiee.net/gmdata) -> 게임 옆 리스트 버튼 클릭 -> base64_decode된 값이 나온다 <br/>
@@ -32,3 +32,19 @@ ct = 데이터 값의 구조 (json, xml)
 이는 데이터를 저장할때 사용한 ct값으로 정렬된다 <br/>
 
 ## 데이터 불러오기
+불러오기도 어렵지 않다. <br/>
+~~~
+전송 링크
+https://www.cookiee.net/tools/game_data_load
+
+패킷 형식
+POST
+
+보내야할 패킷
+token = 발급받은 토큰
+srl = 로그인후 받은 user_srl
+
+리턴값
+* 저장할때 넣었던 데이터 값
+~~~
+만약 데이터 값이 없다면 아무것도 출력하지 않는다. <br/>
